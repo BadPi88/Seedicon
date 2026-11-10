@@ -12,7 +12,7 @@
       <header class="page-header">
         <p class="eyebrow">PIXEL SEED / AVATAR LAB</p>
         <h1>Tu identidad, <span>píxel a píxel.</span></h1>
-        <p class="intro">Escribe una semilla y crea un avatar simétrico que siempre podrás volver a generar.</p>
+        <p class="intro">Escribe una semilla y ensambla un personaje pixel art por capas, con colores y sonidos generados al instante.</p>
       </header>
 
       <section class="generator" aria-label="Generador de avatares">
@@ -20,10 +20,10 @@
           <div class="preview-topline">
             <span class="status-dot" aria-hidden="true"></span>
             <span>VISTA PREVIA</span>
-            <span id="grid-label" class="grid-label">8 × 8</span>
+            <span id="grid-label" class="grid-label">16 × 16</span>
           </div>
           <div class="canvas-frame">
-            <canvas id="avatar-canvas" width="512" height="512" role="img" aria-label="Avatar pixel art generado"></canvas>
+            <pixel-avatar id="avatar-preview" seed="pixel-pioneer" size="420"></pixel-avatar>
           </div>
           <p class="preview-caption">Generado de forma determinista a partir de tu semilla.</p>
         </div>
@@ -38,14 +38,6 @@
             <p class="field-hint">Mismo texto, mismo avatar. Hasta 64 caracteres.</p>
           </div>
 
-          <div class="field-group">
-            <label for="grid-select">Tamaño de cuadrícula</label>
-            <select id="grid-select" name="grid">
-              <option value="8" selected>8 × 8 — más detalle</option>
-              <option value="5">5 × 5 — estilo clásico</option>
-            </select>
-          </div>
-
           <div class="palette-info" aria-live="polite">
             <span>PALETA ACTIVA</span>
             <div id="palette-swatches" class="swatches" aria-label="Colores de la paleta"></div>
@@ -55,7 +47,7 @@
             <button id="download-png" class="button button-primary" type="button">Descargar PNG <span aria-hidden="true">↗</span></button>
             <button id="download-svg" class="button button-secondary" type="button">Descargar SVG <span aria-hidden="true">↗</span></button>
           </div>
-          <p class="export-note">PNG a 512 × 512 px · SVG vectorial escalable</p>
+          <p class="export-note">16 × 16 píxeles · PNG a 512 × 512 px · SVG escalable</p>
         </form>
       </section>
 

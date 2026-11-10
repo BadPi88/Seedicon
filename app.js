@@ -1,66 +1,62 @@
-import { generateAvatar, drawAvatar, avatarToSvg } from './avatar.js';
+import './pixel-avatar.js';
+import { playBleep } from './sound.js';
 
-const canvas = document.querySelector('#avatar-canvas');
+const preview = document.querySelector('#avatar-preview');
 const seedInput = document.querySelector('#seed-input');
-const gridSelect = document.querySelector('#grid-select');
-const gridLabel = document.querySelector('#grid-label');
 const swatches = document.querySelector('#palette-swatches');
 const randomButton = document.querySelector('#random-button');
 const downloadPngButton = document.querySelector('#download-png');
 const downloadSvgButton = document.querySelector('#download-svg');
-
-let currentAvatar;
 
 function safeFilename(seed) {
   const normalized = seed.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
   return normalized.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'avatar';
 }
 
-function render() {
+function updateSeed({ sound = false } = {}) {
   const seed = seedInput.value || 'avatar';
-  currentAvatar = generateAvatar(seed, Number(gridSelect.value));
-  drawAvatar(canvas, currentAvatar);
-  gridLabel.textContent = `${currentAvatar.size} × ${currentAvatar.size}`;
-  canvas.setAttribute('aria-label', `Avatar pixel art para ${seed}, cuadrícula ${currentAvatar.size} por ${currentAvatar.size}`);
-  swatches.replaceChildren(...currentAvatar.palette.map((color, index) => {
+  if (preview.seed === seed) preview.refresh();
+  else preview.seed = seed;
+  if (sound) playBleep();
+}
+
+preview.addEventListener('avatar-rendered', ({ detail }) => {
+  const labels = ['Fondo', 'Silueta', 'Pelo o casco', 'Ojos', 'Accesorio'];
+  swatches.replaceChildren(...detail.palette.map((color, index) => {
     const swatch = document.createElement('span');
     swatch.className = 'swatch';
     swatch.style.backgroundColor = color;
-    swatch.title = ['Fondo', 'Primario', 'Secundario', 'Acento'][index];
-    swatch.setAttribute('aria-label', `${swatch.title}: ${color}`);
+    swatch.title = labels[index];
+    swatch.setAttribute('aria-label', `${labels[index]}: ${color}`);
     return swatch;
   }));
-}
+});
 
-// Al cambiar la semilla o la cuadrícula, generamos y dibujamos el avatar otra vez.
-seedInput.addEventListener('input', render);
-gridSelect.addEventListener('change', render);
+seedInput.addEventListener('input', () => updateSeed({ sound: true }));
+
 randomButton.addEventListener('click', () => {
   const fragment = globalThis.crypto?.randomUUID?.().slice(0, 8) ?? Math.random().toString(36).slice(2, 10);
   seedInput.value = `pixel-${fragment}`;
-  render();
+  updateSeed({ sound: true });
   seedInput.focus();
 });
 
-// Creamos un archivo PNG desde el canvas y lo descargamos como blob.
-downloadPngButton.addEventListener('click', () => {
-  canvas.toBlob((blob) => {
-    if (!blob) {
-      console.error('No se pudo exportar el canvas como PNG.');
-      return;
-    }
+downloadPngButton.addEventListener('click', async () => {
+  try {
+    const blob = await preview.getPngBlob();
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = `${safeFilename(seedInput.value)}.png`;
     link.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }, 'image/png');
+  } catch (error) {
+    console.error('No se pudo descargar el PNG.', error);
+  }
 });
 
 downloadSvgButton.addEventListener('click', () => {
-  const svgData = avatarToSvg(currentAvatar);
-  const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+  const blob = new Blob([preview.getSvg()], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
@@ -69,4 +65,4 @@ downloadSvgButton.addEventListener('click', () => {
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
-render();
+updateSeed();

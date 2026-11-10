@@ -28,7 +28,7 @@ h1 span { color: var(--muted); }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 10px #c4f06680; }
 .grid-label { margin-left: auto; color: #727b8c; }
 .canvas-frame { width: min(100%, 420px); margin: 22px auto 0; overflow: hidden; border: 1px solid #303643; border-radius: 8px; background-color: #202530; background-image: linear-gradient(45deg,#ffffff08 25%,transparent 25%),linear-gradient(-45deg,#ffffff08 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#ffffff08 75%),linear-gradient(-45deg,transparent 75%,#ffffff08 75%); background-position: 0 0,0 8px,8px -8px,-8px 0; background-size: 16px 16px; }
-#avatar-canvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+pixel-avatar { display: block; width: 100%; }
 .preview-caption { margin: 15px 0 0; text-align: center; color: #7f8796; font-size: 11px; }
 .controls-panel { display: flex; flex-direction: column; padding: 26px; gap: 24px; }
 .field-group label { display: block; margin-bottom: 9px; color: #e5e8ed; font-size: 12px; font-weight: 700; }
