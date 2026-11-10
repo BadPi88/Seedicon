@@ -1,10 +1,14 @@
-import { avatarToSvg, drawAvatar, generateAvatar, getPaletteSwatches } from './avatar.js';
+import { avatarToSvg } from './avatar.js';
+import { AvatarAnimator, createAnimatedGifBlob, createAvatarDesign, createFrameCanvas, createSpritesheetBlob } from './src/engine/renderer.ts';
+import { PALETTE_THEMES } from './src/engine/layers.ts';
 
 class PixelAvatar extends HTMLElement {
-  static observedAttributes = ['seed', 'size'];
+  static observedAttributes = ['seed', 'size', 'palette'];
 
   #canvas;
-  #avatar;
+  #design;
+  #animator;
+  #updating = false;
 
   constructor() {
     super();
@@ -24,8 +28,12 @@ class PixelAvatar extends HTMLElement {
     this.#render();
   }
 
+  disconnectedCallback() {
+    this.#animator?.stop();
+  }
+
   attributeChangedCallback() {
-    if (this.isConnected) {
+    if (this.isConnected && !this.#updating) {
       this.#syncSize();
       this.#render();
     }
@@ -35,8 +43,23 @@ class PixelAvatar extends HTMLElement {
     return this.getAttribute('seed') || 'avatar';
   }
 
-  set seed(value) {
-    this.setAttribute('seed', String(value));
+  get palette() {
+    return this.getAttribute('palette') || 'auto';
+  }
+
+  get design() {
+    return this.#design;
+  }
+
+  setAvatarState(seed, palette = 'auto') {
+    this.#updating = true;
+    try {
+      this.setAttribute('seed', String(seed));
+      this.setAttribute('palette', String(palette));
+    } finally {
+      this.#updating = false;
+    }
+    if (this.isConnected) this.#render();
   }
 
   refresh() {
@@ -51,27 +74,62 @@ class PixelAvatar extends HTMLElement {
   }
 
   #render() {
-    this.#avatar = generateAvatar(this.seed);
-    drawAvatar(this.#canvas, this.#avatar);
+    this.#animator?.stop();
+    const paletteIndex = PALETTE_THEMES.indexOf(this.palette);
+    this.#design = createAvatarDesign(this.seed, paletteIndex >= 0 ? paletteIndex : undefined);
+    this.#animator = new AvatarAnimator(this.#canvas, this.#design);
+    this.#animator.start();
     this.#canvas.setAttribute('aria-label', `Avatar pixel art para ${this.seed}`);
     this.dispatchEvent(new CustomEvent('avatar-rendered', {
       bubbles: true,
       composed: true,
-      detail: { palette: getPaletteSwatches(this.#avatar.palette), size: this.#avatar.size },
+      detail: {
+        palette: [
+          this.#design.palette.background,
+          this.#design.palette.skin,
+          this.#design.palette.hair,
+          this.#design.palette.eyeAccent,
+          this.#design.palette.hairHighlight,
+          this.#design.palette.skinShadow,
+          this.#design.palette.outline,
+        ],
+        dna: this.#design.dna,
+        size: 16,
+      },
     }));
   }
 
-  getSvg() {
-    return avatarToSvg(this.#avatar || generateAvatar(this.seed));
-  }
-
-  getPngBlob() {
+  getStaticPngBlob() {
+    const canvas = createFrameCanvas(this.#design, 0);
     return new Promise((resolve, reject) => {
-      this.#canvas.toBlob((blob) => {
+      canvas.toBlob((blob) => {
         if (blob) resolve(blob);
-        else reject(new Error('No se pudo exportar el avatar como PNG.'));
+        else reject(new Error('No se pudo exportar el PNG estático.'));
       }, 'image/png');
     });
+  }
+
+  getSvg() {
+    const colorByPixel = [
+      this.#design.palette.background,
+      this.#design.palette.skin,
+      this.#design.palette.hair,
+      this.#design.palette.eyeAccent,
+      this.#design.palette.skinShadow,
+      this.#design.palette.hairHighlight,
+      this.#design.palette.outline,
+      this.#design.palette.eyeHighlight,
+    ];
+    const pixels = this.#design.matrix.map((row) => row.map((pixel) => colorByPixel[pixel]));
+    return avatarToSvg({ size: 16, pixels });
+  }
+
+  getSpritesheetBlob() {
+    return createSpritesheetBlob(this.#design);
+  }
+
+  getAnimatedGifBlob() {
+    return createAnimatedGifBlob(this.#design);
   }
 }
 

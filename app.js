@@ -21,7 +21,7 @@ function updateSeed({ sound = false } = {}) {
 }
 
 preview.addEventListener('avatar-rendered', ({ detail }) => {
-  const labels = ['Fondo', 'Silueta', 'Pelo o casco', 'Ojos', 'Accesorio'];
+  const labels = ['Fondo', 'Piel', 'Pelo', 'Ojos', 'Brillo', 'Sombra', 'Contorno'];
   swatches.replaceChildren(...detail.palette.map((color, index) => {
     const swatch = document.createElement('span');
     swatch.className = 'swatch';

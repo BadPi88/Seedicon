@@ -44,14 +44,19 @@ select { appearance: none; background-image: linear-gradient(45deg, transparent 
 .palette-info > span { color: #858d9c; }
 .swatches { display: flex; gap: 8px; margin-top: 12px; }
 .swatch { width: 25px; height: 25px; border: 1px solid #ffffff30; border-radius: 5px; }
-.actions { display: grid; gap: 9px; margin-top: auto; }
+.share-actions { display: grid; gap: 8px; }
+.share-actions .button { justify-content: center; }
+.export-group { padding-top: 18px; border-top: 1px solid var(--line); }
+.export-group h2 { margin: 0 0 10px; color: #858d9c; font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 400; letter-spacing: .14em; text-transform: uppercase; }
+.export-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.export-actions .button { min-height: 48px; padding: 8px 10px; justify-content: center; text-align: center; }
 .button { display: flex; justify-content: space-between; align-items: center; min-height: 45px; padding: 0 14px; border: 1px solid transparent; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; transition: transform .15s, background .15s; }
 .button:hover { transform: translateY(-1px); }
 .button-primary { color: #171b13; background: var(--lime); }
 .button-primary:hover { background: #d3fa83; }
 .button-secondary { color: #e8ebef; background: #222733; border-color: #343a47; }
 .button-secondary:hover { background: #2c3340; }
-.export-note { margin: -15px 0 0; text-align: center; color: #737c8b; font-size: 10px; }
+.export-note { margin: -12px 0 0; text-align: center; color: #737c8b; font-size: 10px; }
 .page-footer { display: flex; justify-content: space-between; margin-top: 24px; padding-top: 15px; border-top: 1px solid #242934; color: #687180; font-size: 9px; }
 
 @media (max-width: 720px) {

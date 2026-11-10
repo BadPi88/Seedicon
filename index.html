@@ -38,21 +38,50 @@
             <p class="field-hint">Mismo texto, mismo avatar. Hasta 64 caracteres.</p>
           </div>
 
+          <div class="field-group">
+            <label for="palette-select">Arquetipo de paleta</label>
+            <select id="palette-select" name="palette">
+              <option value="auto">Automática desde la semilla</option>
+              <option value="HUMAN">Human</option>
+              <option value="CYBERPUNK">Cyberpunk</option>
+              <option value="ORC">Orc</option>
+              <option value="UNDEAD">Undead</option>
+            </select>
+          </div>
+
+          <dna-inspector id="dna-inspector"></dna-inspector>
+
+          <div class="share-actions">
+            <button id="copy-link" class="button button-secondary" type="button">Copiar enlace directo</button>
+            <button id="copy-component" class="button button-secondary" type="button">Copiar HTML Web Component</button>
+          </div>
+          <p id="copy-status" class="field-hint" role="status" aria-live="polite"></p>
+
           <div class="palette-info" aria-live="polite">
             <span>PALETA ACTIVA</span>
             <div id="palette-swatches" class="swatches" aria-label="Colores de la paleta"></div>
           </div>
 
-          <div class="actions">
-            <button id="download-png" class="button button-primary" type="button">Descargar PNG <span aria-hidden="true">↗</span></button>
-            <button id="download-svg" class="button button-secondary" type="button">Descargar SVG <span aria-hidden="true">↗</span></button>
+          <div class="export-group">
+            <h2>Estáticos</h2>
+            <div class="export-actions">
+              <button id="download-png" class="button button-primary" type="button">🖼️ PNG estático</button>
+              <button id="download-svg" class="button button-secondary" type="button">📐 SVG vector</button>
+            </div>
           </div>
-          <p class="export-note">16 × 16 píxeles · PNG a 512 × 512 px · SVG escalable</p>
+          <div class="export-group">
+            <h2>Animados</h2>
+            <div class="export-actions">
+              <button id="download-gif" class="button button-primary" type="button">🎬 GIF animado</button>
+              <button id="download-sheet" class="button button-secondary" type="button">🎞️ Spritesheet</button>
+            </div>
+          </div>
+          <p class="export-note">PNG estático 512 × 512 px · Spritesheet 1024 × 512 px</p>
         </form>
       </section>
 
       <footer class="page-footer"><span>HECHO CON UNA SEMILLA Y UN POCO DE AZAR</span><span>01 / PIXEL SEED</span></footer>
     </main>
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./src/app.ts"></script>
   </body>
 </html>
