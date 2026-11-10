@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10131a" />
+    <title>Pixel Seed — Generador de avatares</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="page-header">
+        <p class="eyebrow">PIXEL SEED / AVATAR LAB</p>
+        <h1>Tu identidad, <span>píxel a píxel.</span></h1>
+        <p class="intro">Escribe una semilla y crea un avatar simétrico que siempre podrás volver a generar.</p>
+      </header>
+
+      <section class="generator" aria-label="Generador de avatares">
+        <div class="preview-panel">
+          <div class="preview-topline">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>VISTA PREVIA</span>
+            <span id="grid-label" class="grid-label">8 × 8</span>
+          </div>
+          <div class="canvas-frame">
+            <canvas id="avatar-canvas" width="512" height="512" role="img" aria-label="Avatar pixel art generado"></canvas>
+          </div>
+          <p class="preview-caption">Generado de forma determinista a partir de tu semilla.</p>
+        </div>
+
+        <form class="controls-panel" id="avatar-form">
+          <div class="field-group">
+            <label for="seed-input">Username / Seed</label>
+            <div class="seed-row">
+              <input id="seed-input" name="seed" type="text" value="pixel-pioneer" maxlength="64" autocomplete="off" spellcheck="false" />
+              <button id="random-button" class="icon-button" type="button" aria-label="Generar semilla aleatoria" title="Generar semilla aleatoria">⤨</button>
+            </div>
+            <p class="field-hint">Mismo texto, mismo avatar. Hasta 64 caracteres.</p>
+          </div>
+
+          <div class="field-group">
+            <label for="grid-select">Tamaño de cuadrícula</label>
+            <select id="grid-select" name="grid">
+              <option value="8" selected>8 × 8 — más detalle</option>
+              <option value="5">5 × 5 — estilo clásico</option>
+            </select>
+          </div>
+
+          <div class="palette-info" aria-live="polite">
+            <span>PALETA ACTIVA</span>
+            <div id="palette-swatches" class="swatches" aria-label="Colores de la paleta"></div>
+          </div>
+
+          <div class="actions">
+            <button id="download-png" class="button button-primary" type="button">Descargar PNG <span aria-hidden="true">↗</span></button>
+            <button id="download-svg" class="button button-secondary" type="button">Descargar SVG <span aria-hidden="true">↗</span></button>
+          </div>
+          <p class="export-note">PNG a 512 × 512 px · SVG vectorial escalable</p>
+        </form>
+      </section>
+
+      <footer class="page-footer"><span>HECHO CON UNA SEMILLA Y UN POCO DE AZAR</span><span>01 / PIXEL SEED</span></footer>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
