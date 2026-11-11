@@ -18,7 +18,7 @@ class DnaInspector extends HTMLElement {
         .hash { grid-column: 1 / -1; }
       </style>
       <section aria-label="Genética del avatar">
-        <h2>Seed DNA Inspector</h2>
+        <h2>ADN del avatar</h2>
         <dl></dl>
       </section>
     `;

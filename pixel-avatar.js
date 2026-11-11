@@ -9,10 +9,12 @@ class PixelAvatar extends HTMLElement {
   #design;
   #animator;
   #updating = false;
+  #motionQuery;
 
   constructor() {
     super();
     const shadow = this.attachShadow({ mode: 'open' });
+    this.#motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     shadow.innerHTML = `
       <style>
         :host { display: block; width: min(var(--avatar-size, 128px), 100%); aspect-ratio: 1; }
@@ -24,12 +26,14 @@ class PixelAvatar extends HTMLElement {
   }
 
   connectedCallback() {
+    this.#motionQuery.addEventListener('change', this.#syncMotion);
     this.#syncSize();
     this.#render();
   }
 
   disconnectedCallback() {
     this.#animator?.stop();
+    this.#motionQuery.removeEventListener('change', this.#syncMotion);
   }
 
   attributeChangedCallback() {
@@ -78,7 +82,7 @@ class PixelAvatar extends HTMLElement {
     const paletteIndex = PALETTE_THEMES.indexOf(this.palette);
     this.#design = createAvatarDesign(this.seed, paletteIndex >= 0 ? paletteIndex : undefined);
     this.#animator = new AvatarAnimator(this.#canvas, this.#design);
-    this.#animator.start();
+    this.#syncMotion();
     this.#canvas.setAttribute('aria-label', `Avatar pixel art para ${this.seed}`);
     this.dispatchEvent(new CustomEvent('avatar-rendered', {
       bubbles: true,
@@ -98,6 +102,16 @@ class PixelAvatar extends HTMLElement {
       },
     }));
   }
+
+  #syncMotion = () => {
+    if (!this.isConnected || !this.#animator) return;
+    if (this.#motionQuery.matches) {
+      this.#animator.stop();
+      this.#animator.renderFrame(0);
+    } else {
+      this.#animator.start();
+    }
+  };
 
   getStaticPngBlob() {
     const canvas = createFrameCanvas(this.#design, 0);

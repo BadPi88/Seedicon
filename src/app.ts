@@ -23,6 +23,7 @@ const paletteSelect = document.querySelector<HTMLSelectElement>('#palette-select
 const swatches = document.querySelector<HTMLDivElement>('#palette-swatches')!;
 const inspector = document.querySelector<DnaInspectorElement>('#dna-inspector')!;
 const copyStatus = document.querySelector<HTMLElement>('#copy-status')!;
+const randomButton = document.querySelector<HTMLButtonElement>('#random-button')!;
 
 function currentUrlState(): { seed: string | null; palette: string | null } {
   const url = new URL(window.location.href);
@@ -113,6 +114,13 @@ preview.addEventListener('avatar-rendered', (event) => {
 
 seedInput.addEventListener('input', () => applyInputs(true, true));
 paletteSelect.addEventListener('change', () => applyInputs(true, true));
+randomButton.addEventListener('click', () => {
+  const fragment = globalThis.crypto?.randomUUID?.().slice(0, 8) ?? Math.random().toString(36).slice(2, 10);
+  seedInput.value = `pixel-${fragment}`;
+  applyInputs(true, true);
+  seedInput.focus();
+  seedInput.select();
+});
 window.addEventListener('popstate', applyUrlState);
 window.addEventListener('hashchange', applyUrlState);
 
@@ -133,6 +141,7 @@ document.querySelector<HTMLButtonElement>('#download-png')!.addEventListener('cl
     download(await preview.getStaticPngBlob(), 'png');
   } catch (error) {
     console.error('No se pudo crear el PNG estático.', error);
+    copyStatus.textContent = 'No se pudo generar el PNG. Inténtalo de nuevo.';
   }
 });
 
@@ -145,6 +154,7 @@ document.querySelector<HTMLButtonElement>('#download-gif')!.addEventListener('cl
     download(await preview.getAnimatedGifBlob(), 'gif');
   } catch (error) {
     console.error('No se pudo crear el GIF animado.', error);
+    copyStatus.textContent = 'No se pudo generar el GIF. Inténtalo de nuevo.';
   }
 });
 
@@ -153,6 +163,7 @@ document.querySelector<HTMLButtonElement>('#download-sheet')!.addEventListener('
     download(await preview.getSpritesheetBlob(), 'png');
   } catch (error) {
     console.error('No se pudo crear el spritesheet.', error);
+    copyStatus.textContent = 'No se pudo generar el spritesheet. Inténtalo de nuevo.';
   }
 });
 

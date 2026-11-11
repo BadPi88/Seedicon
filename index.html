@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#10131a" />
+    <meta name="description" content="Crea avatares pixel art únicos a partir de una semilla. Personaliza la paleta y descarga tu avatar en PNG, SVG o GIF." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Pixel Seed — Generador de avatares" />
+    <meta property="og:description" content="Tu identidad, píxel a píxel. Genera y comparte un avatar pixel art único." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Pixel Seed — Generador de avatares</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -32,10 +37,10 @@
           <div class="field-group">
             <label for="seed-input">Username / Seed</label>
             <div class="seed-row">
-              <input id="seed-input" name="seed" type="text" value="pixel-pioneer" maxlength="64" autocomplete="off" spellcheck="false" />
+              <input id="seed-input" name="seed" type="text" value="pixel-pioneer" maxlength="64" autocomplete="off" spellcheck="false" aria-describedby="seed-hint" />
               <button id="random-button" class="icon-button" type="button" aria-label="Generar semilla aleatoria" title="Generar semilla aleatoria">⤨</button>
             </div>
-            <p class="field-hint">Mismo texto, mismo avatar. Hasta 64 caracteres.</p>
+            <p id="seed-hint" class="field-hint">Mismo texto, mismo avatar. Hasta 64 caracteres.</p>
           </div>
 
           <div class="field-group">
